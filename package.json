@@ -1,18 +1,17 @@
 {
-  "name": "wordpress-post-parser",
+  "name": "bad-movie-engine",
   "version": "1.0.0",
-  "description": "Fetches and parses WordPress posts to extract titles, dates, and links",
+  "description": "Bad Movie community data pipeline",
   "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "sync:full": "node cronSync.js full",
+    "sync:delta": "node cronSync.js delta"
   },
-  "keywords": [],
-  "author": "",
-  "license": "MIT",
   "dependencies": {
     "cheerio": "^1.0.0",
-    "dotenv": "^16.4.1",
+    "dotenv": "^16.3.1",
     "node-fetch": "^3.3.2"
   }
 }
