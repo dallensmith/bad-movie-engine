@@ -1,0 +1,41 @@
+name: Full Update
+
+on:
+  schedule:
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run full update
+        env:
+          WORDPRESS_URL:      ${{ secrets.WORDPRESS_URL }}
+          TMDB_API_KEY:       ${{ secrets.TMDB_API_KEY }}
+          NOCO_API_TOKEN:     ${{ secrets.NOCO_API_TOKEN }}
+          NOCO_URL:           ${{ secrets.NOCO_URL }}
+          NOCO_PROJECT_ID:    ${{ secrets.NOCO_PROJECT_ID }}
+          NOCO_TABLE_ID:      ${{ secrets.NOCO_TABLE_ID }}
+        run: |
+          mkdir -p logs
+          node src/index.js 2>&1 | tee logs/full-update.log
+
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: full-update-logs
+          path: logs/full-update.log
